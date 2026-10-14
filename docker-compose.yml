@@ -1,0 +1,37 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile.backend
+    container_name: market-data-backend
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    environment:
+      - UPSTREAM_WS_URL=wss://v3-prod.livefxhub.com/ws/algo
+      - API_KEY=50558cc472f332b399c2760009728e70f39562a4399693b5
+      - SECRET_KEY=2451125110c1a9216219b0aca76eb1d25380dba220d80e741100386c0dc1d31d
+      - PORT=8080
+      - BROADCAST_INTERVAL_MS=30
+      - SNAPSHOT_INTERVAL_SECONDS=10
+      - PERSISTENCE_FILE=data/market_state.json
+      - ENABLE_MOCK_FALLBACK=true
+    volumes:
+      - market-data:/app/data
+
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile.frontend
+    container_name: market-data-frontend
+    restart: unless-stopped
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+
+volumes:
+  market-data:
+    driver: local
