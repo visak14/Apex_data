@@ -1,0 +1,9 @@
+# Ignore local node_modules & dist to prevent copying host binaries into Linux container
+**/node_modules
+**/dist
+**/.vite
+
+# Ignore Git & local executables
+.git
+*.exe
+data/
